@@ -30,6 +30,7 @@ import org.whispersystems.textsecuregcm.entities.DeviceInfo;
 import org.whispersystems.textsecuregcm.entities.DeviceInfoList;
 import org.whispersystems.textsecuregcm.entities.DeviceResponse;
 import org.whispersystems.textsecuregcm.limits.RateLimiters;
+import org.whispersystems.textsecuregcm.sqs.ContactDiscoveryQueueSender;
 import org.whispersystems.textsecuregcm.storage.Account;
 import org.whispersystems.textsecuregcm.storage.AccountsManager;
 import org.whispersystems.textsecuregcm.storage.Device;
@@ -70,6 +71,7 @@ public class DeviceController {
   private final MessagesManager       messages;
   private final RateLimiters          rateLimiters;
   private final Map<String, Integer>  maxDeviceConfiguration;
+
 
   public DeviceController(PendingDevicesManager pendingDevices,
                           AccountsManager accounts,
