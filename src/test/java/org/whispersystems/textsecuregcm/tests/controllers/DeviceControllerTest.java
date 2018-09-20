@@ -29,7 +29,7 @@ import org.whispersystems.textsecuregcm.entities.DeviceResponse;
 import org.whispersystems.textsecuregcm.limits.RateLimiter;
 import org.whispersystems.textsecuregcm.limits.RateLimiters;
 import org.whispersystems.textsecuregcm.mappers.DeviceLimitExceededExceptionMapper;
-import org.whispersystems.textsecuregcm.sqs.ContactDiscoveryQueueSender;
+import org.whispersystems.textsecuregcm.sqs.DirectoryQueue;
 import org.whispersystems.textsecuregcm.storage.*;
 import org.whispersystems.textsecuregcm.tests.util.AuthHelper;
 import org.whispersystems.textsecuregcm.util.VerificationCode;
@@ -68,7 +68,7 @@ public class DeviceControllerTest {
   private PendingDevicesManager pendingDevicesManager = mock(PendingDevicesManager.class);
   private AccountsManager       accountsManager       = mock(AccountsManager.class       );
   private MessagesManager       messagesManager       = mock(MessagesManager.class);
-  private ContactDiscoveryQueueSender cdsSender       = mock(ContactDiscoveryQueueSender.class);
+  private DirectoryQueue        directoryQueue        = mock(DirectoryQueue.class);
   private RateLimiters          rateLimiters          = mock(RateLimiters.class          );
   private RateLimiter           rateLimiter           = mock(RateLimiter.class           );
   private Account               account               = mock(Account.class               );
@@ -209,6 +209,6 @@ public class DeviceControllerTest {
             .delete();
 
     assertEquals(204, response.getStatus());
-    verify(cdsSender).deleteRegisteredUser(eq(AuthHelper.VALID_NUMBER));
+    verify(directoryQueue).deleteRegisteredUser(eq(AuthHelper.VALID_NUMBER));
   }
 }
