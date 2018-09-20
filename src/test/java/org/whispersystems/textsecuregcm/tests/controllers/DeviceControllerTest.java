@@ -53,11 +53,10 @@ public class DeviceControllerTest {
     public DumbVerificationDeviceController(PendingDevicesManager pendingDevices,
                                             AccountsManager accounts,
                                             MessagesManager messages,
-                                            ContactDiscoveryQueueSender cdsSender,
                                             RateLimiters rateLimiters,
                                             Map<String, Integer> deviceConfiguration)
     {
-      super(pendingDevices, accounts, messages, cdsSender, rateLimiters, deviceConfiguration);
+      super(pendingDevices, accounts, messages, rateLimiters, deviceConfiguration);
     }
 
     @Override
@@ -89,7 +88,6 @@ public class DeviceControllerTest {
                                                             .addResource(new DumbVerificationDeviceController(pendingDevicesManager,
                                                                                                               accountsManager,
                                                                                                               messagesManager,
-                                                                                                              cdsSender,
                                                                                                               rateLimiters,
                                                                                                               deviceConfiguration))
                                                             .build();

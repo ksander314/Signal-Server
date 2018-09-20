@@ -200,10 +200,13 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
 
     //ContactDiscoveryQueueSender cdsSender = new ContactDiscoveryQueueSender(config.getDirectoryConfiguration().getSqsConfiguration());
 
-    //DirectoryCredentialsGenerator directoryCredentialsGenerator = new DirectoryCredentialsGenerator(config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenSharedSecret(), config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret());
+    //DirectoryCredentialsGenerator directoryCredentialsGenerator = new DirectoryCredentialsGenerator(config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenSharedSecret(),
+    //                                                                                                config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret());
     //DirectoryReconciliationCache  directoryReconciliationCache  = new DirectoryReconciliationCache(cacheClient);
     //DirectoryReconciliationClient directoryReconciliationClient = new DirectoryReconciliationClient(config.getDirectoryConfiguration().getDirectoryServerConfiguration());
-    //DirectoryReconciler           directoryReconciler           = new DirectoryReconciler(directoryReconciliationClient, directoryReconciliationCache, directory, accounts);
+    //DirectoryReconciler           directoryReconciler           = new DirectoryReconciler(directoryReconciliationClient, directoryReconciliationCache, directory, accounts,
+    //                                                                                      config.getDirectoryConfiguration().getDirectoryServerConfiguration().getReconciliationChunkSize(),
+    //                                                                                      config.getDirectoryConfiguration().getDirectoryServerConfiguration().getReconciliationChunkIntervalMs());
 
     messagesCache.setPubSubManager(pubSubManager, pushSender);
 
