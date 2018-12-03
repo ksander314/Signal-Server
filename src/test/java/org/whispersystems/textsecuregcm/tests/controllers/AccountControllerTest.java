@@ -49,6 +49,7 @@ public class AccountControllerTest {
   private        RateLimiters           rateLimiters           = mock(RateLimiters.class          );
   private        RateLimiter            rateLimiter            = mock(RateLimiter.class           );
   private        RateLimiter            pinLimiter             = mock(RateLimiter.class           );
+  private        RateLimiter            smsVoiceIpLimiter      = mock(RateLimiter.class           );
   private        SmsSender              smsSender              = mock(SmsSender.class             );
   private        DirectoryQueue         directoryQueue         = mock(DirectoryQueue.class);
   private        MessagesManager        storedMessages         = mock(MessagesManager.class       );
@@ -79,6 +80,7 @@ public class AccountControllerTest {
     when(rateLimiters.getVoiceDestinationLimiter()).thenReturn(rateLimiter);
     when(rateLimiters.getVerifyLimiter()).thenReturn(rateLimiter);
     when(rateLimiters.getPinLimiter()).thenReturn(pinLimiter);
+    when(rateLimiters.getSmsVoiceIpLimiter()).thenReturn(smsVoiceIpLimiter);
 
     when(timeProvider.getCurrentTimeMillis()).thenReturn(System.currentTimeMillis());
 
@@ -105,6 +107,7 @@ public class AccountControllerTest {
         resources.getJerseyTest()
                  .target(String.format("/v1/accounts/sms/code/%s", SENDER))
                  .request()
+                 .header("X-Forwarded-For", "127.0.0.1")
                  .get();
 
     assertThat(response.getStatus()).isEqualTo(200);
@@ -119,6 +122,7 @@ public class AccountControllerTest {
                  .target(String.format("/v1/accounts/sms/code/%s", SENDER))
                  .queryParam("client", "ios")
                  .request()
+                 .header("X-Forwarded-For", "127.0.0.1")
                  .get();
 
     assertThat(response.getStatus()).isEqualTo(200);
