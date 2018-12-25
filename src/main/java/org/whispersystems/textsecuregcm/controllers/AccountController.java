@@ -124,7 +124,7 @@ public class AccountController {
       throws IOException, RateLimitExceededException
   {
     if (!Util.isValidNumber(number)) {
-      logger.debug("Invalid number: " + number);
+      logger.info("Invalid number: " + number);
       throw new WebApplicationException(Response.status(400).build());
     }
 
