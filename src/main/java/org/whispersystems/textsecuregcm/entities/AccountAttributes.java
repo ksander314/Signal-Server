@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013 Open WhisperSystems
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,6 +45,12 @@ public class AccountAttributes {
   @JsonProperty
   private String pin;
 
+  @JsonProperty
+  private byte[] unidentifiedAccessKey;
+
+  @JsonProperty
+  private boolean unrestrictedUnidentifiedAccess;
+
   public AccountAttributes() {}
 
   @VisibleForTesting
@@ -89,5 +95,13 @@ public class AccountAttributes {
 
   public String getPin() {
     return pin;
+  }
+
+  public byte[] getUnidentifiedAccessKey() {
+    return unidentifiedAccessKey;
+  }
+
+  public boolean isUnrestrictedUnidentifiedAccess() {
+    return unrestrictedUnidentifiedAccess;
   }
 }
