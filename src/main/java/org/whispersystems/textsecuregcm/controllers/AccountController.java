@@ -124,21 +124,21 @@ public class AccountController {
       throw new WebApplicationException(Response.status(400).build());
     }
 
-    List<AbusiveHostRule> abuseRules = abusiveHostRules.getAbusiveHostRulesFor(requester);
-
-    for (AbusiveHostRule abuseRule : abuseRules) {
-      if (abuseRule.isBlocked()) {
-        logger.info("Blocked host: " + transport + ", " + number + ", " + requester);
-        return Response.ok().build();
-      }
-
-      if (!abuseRule.getRegions().isEmpty()) {
-        if (abuseRule.getRegions().stream().noneMatch(number::startsWith)) {
-          logger.info("Restricted host: " + transport + ", " + number + ", " + requester);
-          return Response.ok().build();
-        }
-      }
-    }
+//    List<AbusiveHostRule> abuseRules = abusiveHostRules.getAbusiveHostRulesFor(requester);
+//
+//    for (AbusiveHostRule abuseRule : abuseRules) {
+//      if (abuseRule.isBlocked()) {
+//        logger.info("Blocked host: " + transport + ", " + number + ", " + requester);
+//        return Response.ok().build();
+//      }
+//
+//      if (!abuseRule.getRegions().isEmpty()) {
+//        if (abuseRule.getRegions().stream().noneMatch(number::startsWith)) {
+//          logger.info("Restricted host: " + transport + ", " + number + ", " + requester);
+//          return Response.ok().build();
+//        }
+//      }
+//    }
 
     try {
       rateLimiters.getSmsVoiceIpLimiter().validate(requester);
