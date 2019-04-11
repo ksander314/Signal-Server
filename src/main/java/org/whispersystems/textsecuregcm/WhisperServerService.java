@@ -222,7 +222,6 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, abusiveHostRules, rateLimiters, smsSender, messagesManager, turnTokenGenerator, config.getTestDevices()));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, rateLimiters, config.getMaxDevices()));
     environment.jersey().register(new DirectoryController(rateLimiters, directory, null));
->>>>>>> 2daabd0... Add support for host filtering
     environment.jersey().register(new ProvisioningController(rateLimiters, pushSender));
 
     //environment.jersey().register(new CertificateController(new CertificateGenerator(config.getDeliveryCertificate().getCertificate(), config.getDeliveryCertificate().getPrivateKey(), config.getDeliveryCertificate().getExpiresDays())));
