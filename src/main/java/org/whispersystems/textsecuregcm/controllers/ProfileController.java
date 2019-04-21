@@ -7,6 +7,11 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.codahale.metrics.annotation.Timed;
+
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.SDKGlobalConfiguration;
+
 import org.apache.commons.codec.binary.Base64;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
@@ -63,12 +68,13 @@ public class ProfileController {
     this.rateLimiters       = rateLimiters;
     this.accountsManager    = accountsManager;
     this.bucket             = profilesConfiguration.getBucket();
+    System.setProperty(SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY, "true");
     this.s3client           = AmazonS3Client.builder()
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://storage.wooz.ml", "us-east-1"))
                                             .withCredentials(credentialsProvider)
-                                            .withRegion(profilesConfiguration.getRegion())
                                             .build();
 
-    this.policyGenerator  = new PostPolicyGenerator(profilesConfiguration.getRegion(),
+    this.policyGenerator  = new PostPolicyGenerator("us-east-1",
                                                     profilesConfiguration.getBucket(),
                                                     profilesConfiguration.getAccessKey());
 

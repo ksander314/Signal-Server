@@ -19,6 +19,13 @@ package org.whispersystems.textsecuregcm.s3;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.SDKGlobalConfiguration;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
@@ -41,17 +48,22 @@ public class UrlSigner {
   }
 
   public URL getPreSignedUrl(long attachmentId, HttpMethod method, boolean unaccelerated) {
-    AmazonS3                    client  = new AmazonS3Client(credentials);
+      System.setProperty(SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY, "true");
+     AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+     AmazonS3                    client  = AmazonS3Client.builder().withCredentials(credentialsProvider)
+         .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://store.flash-messenger.ml", "us-east-1"))
+         .enablePathStyleAccess()
+         .build();
     GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket, String.valueOf(attachmentId), method);
     
     request.setExpiration(new Date(System.currentTimeMillis() + DURATION));
     request.setContentType("application/octet-stream");
 
-    if (unaccelerated) {
-      client.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).build());
-    } else {
-      client.setS3ClientOptions(S3ClientOptions.builder().setAccelerateModeEnabled(true).build());
-    }
+    //if (unaccelerated) {
+    //  client.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).build());
+    //} else {
+    //  client.setS3ClientOptions(S3ClientOptions.builder().setAccelerateModeEnabled(true).build());
+    //}
 
     return client.generatePresignedUrl(request);
   }
