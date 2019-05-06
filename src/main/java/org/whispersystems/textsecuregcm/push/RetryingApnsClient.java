@@ -7,7 +7,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import com.turo.pushy.apns.ApnsClient;
+import java.io.File;
 import com.turo.pushy.apns.ApnsClientBuilder;
+import com.turo.pushy.apns.auth.ApnsSigningKey;
 import com.turo.pushy.apns.DeliveryPriority;
 import com.turo.pushy.apns.PushNotificationResponse;
 import com.turo.pushy.apns.metrics.dropwizard.DropwizardApnsClientMetricsListener;
@@ -22,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.security.NoSuchAlgorithmException;
+import java.security.InvalidKeyException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Map;
@@ -45,12 +49,18 @@ public class RetryingApnsClient {
     for (Map.Entry<String, Metric> entry : metricsListener.getMetrics().entrySet()) {
       metricRegistry.register(name(getClass(), entry.getKey()), entry.getValue());
     }
-
-    this.apnsClient = new ApnsClientBuilder().setClientCredentials(initializeCertificate(apnCertificate),
-                                                                   initializePrivateKey(apnKey), null)
+    ApnsClient c = null;
+    try {
+    c = new ApnsClientBuilder().setSigningKey(ApnsSigningKey.loadFromPkcs8File(new File(apnCertificate),
+                                                                               "658X7PE8ZZ", apnKey))
                                              .setMetricsListener(metricsListener)
                                              .setApnsServer(sandbox ? ApnsClientBuilder.DEVELOPMENT_APNS_HOST : ApnsClientBuilder.PRODUCTION_APNS_HOST)
                                              .build();
+    }
+    catch (Exception e) {
+        logger.warn(e.getMessage());
+    }
+    this.apnsClient = c;
   }
 
   @VisibleForTesting
@@ -78,7 +88,7 @@ public class RetryingApnsClient {
 
   private static PrivateKey initializePrivateKey(String pemKey) throws IOException {
     PEMReader reader = new PEMReader(new InputStreamReader(new ByteArrayInputStream(pemKey.getBytes())));
-    return null; // ((KeyPair) reader.readObject()).getPrivate();
+    return ((KeyPair) reader.readObject()).getPrivate();
   }
 
   private static final class ResponseHandler implements GenericFutureListener<io.netty.util.concurrent.Future<PushNotificationResponse<SimpleApnsPushNotification>>> {
