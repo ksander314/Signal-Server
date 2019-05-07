@@ -138,16 +138,16 @@ public class AccountController {
       throw new WebApplicationException(Response.status(400).build());
     }
 
-    List<String> requesters = Arrays.stream(forwardedFor.split(",")).map(String::trim).collect(Collectors.toList());
-
-    if (requesters.size() > 10) {
-      logger.info("Request with more than 10 hops: " + transport + ", " + number + ", " + forwardedFor);
-      return Response.status(400).build();
-    }
-
-    if (requiresCaptcha(number, transport, forwardedFor, requesters, captcha)) {
-      return Response.status(402).build();
-    }
+    //List<String> requesters = Arrays.stream(forwardedFor.split(",")).map(String::trim).collect(Collectors.toList());
+    //
+    //if (requesters.size() > 10) {
+    //  logger.info("Request with more than 10 hops: " + transport + ", " + number + ", " + forwardedFor);
+    //  return Response.status(400).build();
+    //}
+    //
+    //if (requiresCaptcha(number, transport, forwardedFor, requesters, captcha)) {
+    //  return Response.status(402).build();
+    //}
 
     switch (transport) {
       case "sms":
